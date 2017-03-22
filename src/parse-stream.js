@@ -334,6 +334,7 @@ export default class ParseStream extends Stream {
       if (match[1]) {
         event.dateTimeString = match[1];
         event.dateTimeObject = new Date(match[1]);
+        event.startTime = event.dateTimeObject;
       }
       this.trigger('data', event);
       return;
