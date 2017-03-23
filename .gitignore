@@ -27,11 +27,3 @@ node_modules/
 
 # Yeoman meta-data
 .yo-rc.json
-
-# Build-related directories
-dist/
-docs/api/
-es5/
-test/dist/
-test/test-expected.js
-test/test-manifests.js
