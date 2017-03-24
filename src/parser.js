@@ -40,8 +40,8 @@ export default class Parser extends Stream {
     // if specified, the active EXT-X-MAP definition
     let currentMap;
     // if specified, the active decryption key
-    let key;
-    const noop = function() {};
+    let key, daterange;
+    const noop = function () {};
     const defaultMediaGroups = {
       'AUDIO': {},
       'VIDEO': {},
@@ -297,6 +297,39 @@ export default class Parser extends Stream {
             },
             'cue-in'() {
               currentUri.cueIn = entry.data;
+            },
+            daterange(){
+              if (!entry.attributes) {
+                this.trigger('warn', {
+                  message: 'ignoring daterange declaration without attributes'
+                });
+                return;
+              }
+
+              if (!entry.attributes.ID) {
+                this.trigger('warn', {
+                  message: 'ignoring daterange declaration without ID'
+                });
+                return;
+              }
+
+             let cutomAttributes =  Object.keys(entry.attributes)
+               .filter(function (attrKey){
+                 return attrKey.startsWith('X-')
+               })
+               .reduce(function (customAttrObj, key){
+                  let value = entry.attributes[key];
+                  customAttrObj[key] = value;
+                  return customAttrObj;
+                }, {})
+
+              daterange = {
+                id: entry.attributes.ID,
+                class: entry.attributes.CLASS,
+                endDate: entry.attributes['END-DATE'],
+                startDate: entry.attributes['START-DATE'],
+                customAttributes: cutomAttributes
+              }
             }
           })[entry.tagType] || noop).call(self);
         },
@@ -316,6 +349,11 @@ export default class Parser extends Stream {
           if (key) {
             currentUri.key = key;
           }
+
+          if (daterange) {
+            currentUri.daterange = daterange
+          }
+
           currentUri.timeline = currentTimeline;
           // annotate with initialization segment information, if necessary
           if (currentMap) {

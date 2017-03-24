@@ -1,7 +1,7 @@
 /**
  * @file m3u8/parse-stream.js
  */
-import Stream from './stream';
+import Stream from "./stream";
 
 /**
  * "forgiving" attribute list psuedo-grammar:
@@ -10,7 +10,7 @@ import Stream from './stream';
  * key        -> [^=]*
  * value      -> '"' [^"]* '"' | [^,]*
  */
-const attributeSeparator = function() {
+const attributeSeparator = function () {
   const key = '[^=]*';
   const value = '"[^"]*"|[^,]*';
   const keyvalue = '(?:' + key + ')=(?:' + value + ')';
@@ -23,7 +23,7 @@ const attributeSeparator = function() {
  *
  * @param {String} attributes the attibute line to parse
  */
-const parseAttributes = function(attributes) {
+const parseAttributes = function (attributes) {
   // split the string using attributes as the separator
   const attrs = attributes.split(attributeSeparator());
   const result = {};
@@ -402,6 +402,18 @@ export default class ParseStream extends Stream {
         event.data = match[1];
       } else {
         event.data = '';
+      }
+      this.trigger('data', event);
+      return;
+    }
+    match = (/^#EXT-X-DATERANGE:?(.*)$/).exec(line);
+    if (match) {
+      event = {
+        type: 'tag',
+        tagType: 'daterange'
+      };
+      if (match[1]) {
+        event.attributes = parseAttributes(match[1]);
       }
       this.trigger('data', event);
       return;
