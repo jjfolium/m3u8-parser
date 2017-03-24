@@ -49,6 +49,7 @@ var manifest = [
   '#EXT-X-TARGETDURATION:6',
   '#EXT-X-MEDIA-SEQUENCE:0',
   '#EXT-X-DISCONTINUITY-SEQUENCE:0',
+  '#EXT-X-DATERANGE:ID="id",CLASS="class",START-DATE="2016-11-09T00:00:00.000Z",END-DATE="2016-11-09T00:00:00.000Z",X-CUSTOM-ATTRIBUTES="start"',
   '#EXTINF:6,',
   '0.ts',
   '#EXTINF:6,',
@@ -113,6 +114,13 @@ Manifest {
       duration: number,
       attributes: {},
       discontinuity: number,
+      daterange: {
+        id: string,
+        class: string,
+        endDate: string,
+        startDate: string,
+        customAttributes: Object
+      },
       uri: string,
       timeline: number,
       key: {
@@ -150,6 +158,7 @@ Manifest {
 * [EXT-X-KEY](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.2.4)
 * [EXT-X-MAP](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.2.5)
 * [EXT-X-PROGRAM-DATE-TIME](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.2.6)
+* [EXT-X-DATERANGE](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.2.7)
 
 ### Media Playlist Tags
 
@@ -224,10 +233,35 @@ Example media playlist using `EXT-X-CUE-` tags.
 6.ts
 #EXT-X-ENDLIST
 ```
+Example media playlist using `EXT-X-DATERANGE:` tags.
 
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXTINF:10,
+'#EXT-X-DATERANGE:ID="id",CLASS="class",START-DATE="2016-11-09T00:00:00.000Z",END-DATE="2016-11-09T00:00:00.000Z",X-CUSTOM-ATTRIBUTES="start"',
+0.ts
+#EXTINF:10,
+1.ts
+#EXT-X-CUE-OUT:30
+#EXTINF:10,
+2.ts
+#EXT-X-CUE-OUT-CONT:10/30
+#EXTINF:10,
+3.ts
+#EXT-X-CUE-OUT-CONT:20/30
+#EXTINF:10,
+4.ts
+#EXT-X-CUE-IN
+#EXTINF:10,
+5.ts
+#EXTINF:10,
+6.ts
+#EXT-X-ENDLIST
+```
 ### Not Yet Supported
 
-* [EXT-X-DATERANGE](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.2.7)
 * [EXT-X-I-FRAMES-ONLY](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.3.6)
 * [EXT-X-I-FRAME-STREAM-INF](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.4.3)
 * [EXT-X-SESSION-DATA](http://tools.ietf.org/html/draft-pantos-http-live-streaming#section-4.3.4.4)
